@@ -1,0 +1,84 @@
+**/.claude/settings.local.json
+# Általános fájlok és mappák figyelmen kívül hagyása
+
+# Python specifikus
+__pycache__/
+*.pyc
+.python-version # ha pyenv-et használsz
+venv/ # gyakori virtuális környezet mappa nevek
+.venv/
+env/
+
+# Fordításból származó fájlok (ha lennének C/C++ kiterjesztések)
+*.o
+*.obj
+*.ko
+*.elf
+*.lst
+*.map
+*.mod
+
+# Binárisok (ha lennének)
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Csomagkezelők által létrehozott mappák
+node_modules/ # ha használsz Node.js függőségeket valahol
+vendor/ # ha használsz PHP/Composer függőségeket
+composer.lock
+yarn.lock
+pnpm-lock.yaml
+requirements.txt # Általában nem ignoraljuk, de ha generált, akkor lehet. Itt inkább NEM!
+
+# Naplófájlok
+*.log
+log/
+
+# Átmeneti fájlok
+*.tmp
+*.swp
+*.swo
+
+# Konfigurációs fájlok, amik lokálisak lehetnek
+.env
+.flaskenv
+config.ini
+config.yaml
+*.local # Pl. .env.local
+
+# IDE (Integrált Fejlesztői Környezet) specifikus fájlok
+.idea/
+.vscode/
+*.iml
+*.project
+*.settings
+*.sublime-project
+*.sublime-workspace
+
+# Operációs rendszer specifikus fájlok
+.DS_Store
+Thumbs.db
+
+# Build könyvtárak
+build/
+dist/
+out/
+
+# Teszteléshez kapcsolódó kimenetek
+coverage/
+.nyc_output/
+
+# Dockerrel kapcsolatos dolgok (opcionális, ha nem akarod commitolni a build kontextust)
+# docker-compose.override.yml # ha van lokális override fájl
+# !docker-compose.yml # ha az override-ot ignorálod, de a fő fájlt nem
+
+# Egyéb gyakran figyelmen kívül hagyott elemek
+backup/
+temp/
+
+# Ha vannak nagy méretű fájlok, amiket nem akarsz a repóban tárolni
+# pl. video/
+# pl. archives/
+# pl. data/ # ha nagy adatfájlokat generál a projekt
