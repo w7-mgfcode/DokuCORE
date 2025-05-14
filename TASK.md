@@ -171,9 +171,13 @@ This document tracks current tasks, backlog items, and sub-tasks for implementin
 - Docker Compose: 100% complete
 
 ## Discovered During Work
-- [ ] Create unit tests for core components
-- [ ] Setup proper error handling and logging
-- [ ] Add configuration management for embedding model parameters
+- [x] Create unit tests for core components (2025-05-14)
+- [x] Setup proper error handling and logging (2025-05-14)
+- [x] Add configuration management for embedding model parameters (2025-05-14)
 - [ ] Implement better documentation relationship visualization
 - [ ] Optimize database queries for performance
 - [ ] Add authentication and authorization
+- [ ] Implement application health monitoring
+- [ ] Add API documentation with Swagger/OpenAPI
+- [ ] Create database migration system
+- [ ] Implement proper error responses for API endpoints

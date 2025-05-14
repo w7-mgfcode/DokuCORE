@@ -40,4 +40,3 @@ Never delete or overwrite existing code unless instructed or if it's part of a t
 
 
 Please start by analyzing the current project files and give me a clear implementation plan. Let's approach this systematically by breaking down the implementation into manageable steps.
-2

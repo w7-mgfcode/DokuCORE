@@ -107,13 +107,42 @@ DokuCORE/
 └── repo/         # Monitored git repository
 ```
 
+## Development
+
+### Testing
+
+The project uses pytest for testing. To run the tests:
+
+```bash
+# Run all tests
+./run_tests.sh
+
+# Run specific test files
+python -m pytest tests/api/test_document_endpoints.py
+
+# Run tests with specific markers
+python -m pytest -m unit  # Run unit tests only
+```
+
+### Configuration
+
+Configuration is managed through environment variables. See the `.env` file for available options.
+
+Key configuration options:
+- `DATABASE_URL`: PostgreSQL connection string
+- `API_PORT`: Port for the FastAPI server
+- `EMBEDDING_MODEL`: Name of the SentenceTransformer model to use
+- `SIMILARITY_THRESHOLD`: Threshold for semantic similarity (0.0-1.0)
+
 ## Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Add tests for your changes
+4. Ensure all tests pass (`./run_tests.sh`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
 
 ## License
 

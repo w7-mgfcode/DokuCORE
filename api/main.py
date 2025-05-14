@@ -16,9 +16,9 @@ from .services.document_service import DocumentService
 from .services.task_service import TaskService
 from .services.search_service import SearchService
 from .mcp_tools import MCPTools
+from .utils import config, setup_middleware
 
-# Setup logging
-logging.basicConfig(level=logging.INFO)
+# Setup logging (now handled by config)
 logger = logging.getLogger(__name__)
 
 # Create FastAPI application
@@ -27,8 +27,11 @@ app = FastAPI(title="AI Documentation System")
 # Initialize MCP server
 mcp = FastApiMCP(app)
 
+# Apply middleware
+setup_middleware(app)
+
 # Initialize embedding model
-model = SentenceTransformer('all-MiniLM-L6-v2')
+model = SentenceTransformer(config.embedding_model_name)
 
 # Initialize services
 document_service = DocumentService(model)
@@ -57,6 +60,11 @@ async def startup_event():
     logger.info("AI Documentation System started")
     logger.info(f"Documentation API running on port: {os.environ.get('API_PORT', 9000)}")
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint."""
+    return {"status": "ok", "config": config.get_config_dict()}
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("API_PORT", 9000)))
+    uvicorn.run(app, host=config.api_host, port=config.api_port)
