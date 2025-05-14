@@ -3,11 +3,13 @@ import tempfile
 import shutil
 import os
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Security
 from sentence_transformers import SentenceTransformer
 
 from ..models import Document, DocumentCreate, DocumentUpdate
+from ..models.auth import User
 from ..services.document_service import DocumentService
+from ..services.auth_service import get_current_active_user
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +37,11 @@ class DocumentRouter:
         
         # Register routes
         @router.post("/", response_model=Document)
-        def create_document(document: DocumentCreate, service: DocumentService = Depends(get_service)):
+        def create_document(
+            document: DocumentCreate, 
+            service: DocumentService = Depends(get_service),
+            current_user: User = Security(get_current_active_user, scopes=["documents:write"])
+        ):
             """Create a new document and index it."""
             try:
                 result = service.create_document(document.title, document.path, document.content)
@@ -47,7 +53,12 @@ class DocumentRouter:
                 raise HTTPException(status_code=500, detail=str(e))
         
         @router.post("/upload/")
-        async def upload_document(file: UploadFile = File(...), path: Optional[str] = None, service: DocumentService = Depends(get_service)):
+        async def upload_document(
+            file: UploadFile = File(...), 
+            path: Optional[str] = None, 
+            service: DocumentService = Depends(get_service),
+            current_user: User = Security(get_current_active_user, scopes=["documents:write"])
+        ):
             """Upload markdown file and index it."""
             try:
                 # Create temporary file
@@ -82,7 +93,10 @@ class DocumentRouter:
                 raise HTTPException(status_code=500, detail=str(e))
         
         @router.get("/", response_model=List[Document])
-        def read_documents(service: DocumentService = Depends(get_service)):
+        def read_documents(
+            service: DocumentService = Depends(get_service),
+            current_user: User = Security(get_current_active_user, scopes=["documents:read"])
+        ):
             """Get all documents."""
             try:
                 results = service.list_documents()
@@ -92,7 +106,11 @@ class DocumentRouter:
                 raise HTTPException(status_code=500, detail=str(e))
         
         @router.get("/{doc_id}", response_model=Document)
-        def read_document(doc_id: int, service: DocumentService = Depends(get_service)):
+        def read_document(
+            doc_id: int, 
+            service: DocumentService = Depends(get_service),
+            current_user: User = Security(get_current_active_user, scopes=["documents:read"])
+        ):
             """Get a specific document."""
             try:
                 result = service.get_document(doc_id)
@@ -104,7 +122,11 @@ class DocumentRouter:
                 raise HTTPException(status_code=500, detail=str(e))
         
         @router.get("/{doc_id}/structure")
-        def read_document_structure(doc_id: int, service: DocumentService = Depends(get_service)):
+        def read_document_structure(
+            doc_id: int, 
+            service: DocumentService = Depends(get_service),
+            current_user: User = Security(get_current_active_user, scopes=["documents:read"])
+        ):
             """Get hierarchical structure of a document."""
             try:
                 result = service.get_document_structure(doc_id)
@@ -116,7 +138,12 @@ class DocumentRouter:
                 raise HTTPException(status_code=500, detail=str(e))
         
         @router.put("/{doc_id}", response_model=Document)
-        def update_document_endpoint(doc_id: int, document_update: DocumentUpdate, service: DocumentService = Depends(get_service)):
+        def update_document_endpoint(
+            doc_id: int, 
+            document_update: DocumentUpdate, 
+            service: DocumentService = Depends(get_service),
+            current_user: User = Security(get_current_active_user, scopes=["documents:write"])
+        ):
             """Update a document."""
             try:
                 # Use service for update

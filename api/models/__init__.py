@@ -14,6 +14,23 @@ from .task import (
     Task
 )
 
+from .auth import (
+    Token,
+    TokenData,
+    User,
+    UserInDB,
+    UserCreate,
+    UserLogin
+)
+
+from .version import (
+    DocumentVersion,
+    DocumentVersionCreate,
+    DocumentApproval,
+    DocumentApprovalCreate,
+    DocumentApprovalUpdate
+)
+
 __all__ = [
     'DocumentBase',
     'DocumentCreate',
@@ -24,5 +41,16 @@ __all__ = [
     'KeywordModel',
     'TaskBase',
     'TaskCreate',
-    'Task'
+    'Task',
+    'Token',
+    'TokenData',
+    'User',
+    'UserInDB',
+    'UserCreate',
+    'UserLogin',
+    'DocumentVersion',
+    'DocumentVersionCreate',
+    'DocumentApproval',
+    'DocumentApprovalCreate',
+    'DocumentApprovalUpdate'
 ]

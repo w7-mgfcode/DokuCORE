@@ -5,6 +5,7 @@ from fastapi_mcp import FastApiMCP
 from .services.document_service import DocumentService
 from .services.task_service import TaskService
 from .services.search_service import SearchService
+from .services.version_service import VersionService
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ class MCPTools:
         self.document_service = document_service
         self.task_service = task_service
         self.search_service = search_service
+        self.version_service = VersionService()
         
         # Register MCP tools
         self._register_tools()
@@ -104,3 +106,92 @@ class MCPTools:
             except Exception as e:
                 logger.error(f"Error executing get_tasks function: {str(e)}")
                 return [{"error": str(e)}]
+        
+        @self.mcp.tool()
+        def get_document_versions(doc_id: int) -> List[Dict[str, Any]]:
+            """Get version history for a document."""
+            logger.info(f"get_document_versions MCP function called: {doc_id}")
+            try:
+                return self.version_service.get_document_versions(doc_id)
+            except Exception as e:
+                logger.error(f"Error executing get_document_versions function: {str(e)}")
+                return [{"error": str(e)}]
+        
+        @self.mcp.tool()
+        def get_document_version(doc_id: int, version: int) -> Dict[str, Any]:
+            """Get a specific version of a document."""
+            logger.info(f"get_document_version MCP function called: {doc_id}, {version}")
+            try:
+                result = self.version_service.get_document_version(doc_id, version)
+                if not result:
+                    return {"error": f"Version {version} not found for document {doc_id}"}
+                return result
+            except Exception as e:
+                logger.error(f"Error executing get_document_version function: {str(e)}")
+                return {"error": str(e)}
+        
+        @self.mcp.tool()
+        def restore_document_version(doc_id: int, version: int, user: str) -> Dict[str, Any]:
+            """Restore a document to a previous version."""
+            logger.info(f"restore_document_version MCP function called: {doc_id}, {version}, {user}")
+            try:
+                return self.version_service.restore_document_version(doc_id, version, user)
+            except Exception as e:
+                logger.error(f"Error executing restore_document_version function: {str(e)}")
+                return {"status": "error", "message": str(e)}
+        
+        @self.mcp.tool()
+        def get_approval_requests(status: Optional[str] = None) -> List[Dict[str, Any]]:
+            """Get document approval requests."""
+            logger.info(f"get_approval_requests MCP function called: {status}")
+            try:
+                return self.version_service.get_approval_requests(status)
+            except Exception as e:
+                logger.error(f"Error executing get_approval_requests function: {str(e)}")
+                return [{"error": str(e)}]
+                
+        @self.mcp.tool()
+        def get_approval_request(approval_id: int) -> Dict[str, Any]:
+            """Get a specific approval request."""
+            logger.info(f"get_approval_request MCP function called: {approval_id}")
+            try:
+                result = self.version_service.get_approval_request(approval_id)
+                if not result:
+                    return {"error": f"Approval request {approval_id} not found"}
+                return result
+            except Exception as e:
+                logger.error(f"Error executing get_approval_request function: {str(e)}")
+                return {"error": str(e)}
+        
+        @self.mcp.tool()
+        def create_approval_request(document_id: int, version: int, requested_by: str, comments: Optional[str] = None) -> Dict[str, Any]:
+            """Create a document approval request."""
+            logger.info(f"create_approval_request MCP function called: {document_id}, {version}")
+            try:
+                from .models.version import DocumentApprovalCreate
+                approval = DocumentApprovalCreate(
+                    document_id=document_id,
+                    version=version,
+                    requested_by=requested_by,
+                    comments=comments
+                )
+                return self.version_service.create_approval_request(approval)
+            except Exception as e:
+                logger.error(f"Error executing create_approval_request function: {str(e)}")
+                return {"status": "error", "message": str(e)}
+        
+        @self.mcp.tool()
+        def update_approval_request(approval_id: int, status: str, approved_by: str, comments: Optional[str] = None) -> Dict[str, Any]:
+            """Update an approval request (approve or reject)."""
+            logger.info(f"update_approval_request MCP function called: {approval_id}, {status}")
+            try:
+                from .models.version import DocumentApprovalUpdate
+                update = DocumentApprovalUpdate(
+                    status=status,
+                    approved_by=approved_by,
+                    comments=comments
+                )
+                return self.version_service.update_approval_request(approval_id, update)
+            except Exception as e:
+                logger.error(f"Error executing update_approval_request function: {str(e)}")
+                return {"status": "error", "message": str(e)}

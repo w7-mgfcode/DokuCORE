@@ -1,10 +1,12 @@
 import logging
+import psycopg2.extras
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 from sentence_transformers import SentenceTransformer
 
 from ..utils.db import get_db_connection
 from ..indexing.hierarchical_indexer import HierarchicalIndexer
+from ..utils.config import config
 
 logger = logging.getLogger(__name__)
 
@@ -31,12 +33,14 @@ class DocumentService:
         try:
             conn = get_db_connection()
             cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-            cursor.execute("SELECT id, title, path FROM documents")
+            cursor.execute("SELECT id, title, path, approval_status, approved_version FROM documents")
             results = cursor.fetchall()
             cursor.close()
             conn.close()
 
-            return [{"id": row["id"], "title": row["title"], "path": row["path"]} for row in results]
+            return [{"id": row["id"], "title": row["title"], "path": row["path"], 
+                     "approval_status": row["approval_status"], "approved_version": row["approved_version"]} 
+                    for row in results]
         except Exception as e:
             logger.error(f"Error listing documents: {str(e)}")
             return []
@@ -79,14 +83,41 @@ class DocumentService:
         try:
             conn = get_db_connection()
             cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-            cursor.execute("SELECT id, title, path, content, last_modified, version FROM documents WHERE id = %s", (doc_id,))
+            cursor.execute(
+                """SELECT id, title, path, content, last_modified, version, 
+                         approval_status, approved_version 
+                   FROM documents 
+                   WHERE id = %s""", 
+                (doc_id,)
+            )
             result = cursor.fetchone()
+            
+            if not result:
+                cursor.close()
+                conn.close()
+                return None
+            
+            document = dict(result)
+            
+            # Get approval information if the document has pending approvals
+            if document["approval_status"] == "under_review":
+                cursor.execute(
+                    """SELECT id, version, status, requested_by, requested_at, 
+                             approved_by, approved_at, comments
+                       FROM document_approval 
+                       WHERE document_id = %s AND status = 'pending'
+                       ORDER BY requested_at DESC
+                       LIMIT 1""",
+                    (doc_id,)
+                )
+                approval = cursor.fetchone()
+                if approval:
+                    document["pending_approval"] = dict(approval)
+            
             cursor.close()
             conn.close()
-
-            if not result:
-                return None
-            return dict(result)
+            return document
+            
         except Exception as e:
             logger.error(f"Error getting document: {str(e)}")
             return None
@@ -107,8 +138,13 @@ class DocumentService:
             conn = get_db_connection()
             cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-            # Generate embedding
-            embedding = self.model.encode(content).tolist()
+            # Generate embedding with optimized parameters
+            # Reason: Using normalized embeddings improves vector search performance
+            embedding = self.model.encode(
+                content, 
+                normalize_embeddings=True,  # Ensures consistent cosine similarity calculations
+                show_progress_bar=False     # Reduces overhead for short texts
+            ).tolist()
 
             cursor.execute(
                 """INSERT INTO documents (title, path, content, embedding)
@@ -157,8 +193,13 @@ class DocumentService:
             current_version = result["version"]
             old_content = result["content"]
 
-            # Generate new embedding
-            embedding = self.model.encode(new_content).tolist()
+            # Generate new embedding with optimized parameters
+            # Reason: Using normalized embeddings improves vector search performance
+            embedding = self.model.encode(
+                new_content, 
+                normalize_embeddings=True,  # Ensures consistent cosine similarity calculations
+                show_progress_bar=False     # Reduces overhead for short texts
+            ).tolist()
 
             # Add to history
             cursor.execute(

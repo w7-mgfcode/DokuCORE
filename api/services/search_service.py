@@ -1,9 +1,11 @@
 import logging
 from typing import List, Dict, Any
 import psycopg2.extras
+import hashlib
 from sentence_transformers import SentenceTransformer
 
 from ..indexing.hierarchical_search import HierarchicalSearch
+from ..utils import cache, cached, config
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +22,13 @@ class SearchService:
         self.model = embedding_model
         self.search_engine = HierarchicalSearch(embedding_model)
     
+    # Use the cached decorator to cache search results
+    # Reason: Search operations are expensive and results often reused
+    @cached(
+        ttl_seconds=300,  # Cache for 5 minutes
+        key_prefix="search",
+        key_func=lambda self, query, limit=5: f"search:{hashlib.md5(query.encode()).hexdigest()}:{limit}"
+    )
     def search_docs(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
         """
         Search documentation with hierarchical context.
@@ -75,3 +84,12 @@ class SearchService:
         except Exception as e:
             logger.error(f"Error searching docs: {str(e)}")
             return [{"error": str(e)}]
+            
+    def get_cache_stats(self) -> Dict[str, Any]:
+        """
+        Get search cache statistics.
+        
+        Returns:
+            Dict[str, Any]: Cache statistics.
+        """
+        return cache.stats()

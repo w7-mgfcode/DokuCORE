@@ -17,6 +17,9 @@ class Document(DocumentBase):
     id: int
     last_modified: datetime
     version: int
+    approval_status: Optional[str] = "draft"
+    approved_version: Optional[int] = None
+    pending_approval: Optional[Dict[str, Any]] = None
 
 class DocumentUpdate(BaseModel):
     """Input model for document update."""

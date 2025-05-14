@@ -89,24 +89,34 @@ The project includes a comprehensive test suite using pytest:
 
 ## Performance Considerations
 
-- Vector search is optimized using pgvector's HNSW index
-- Hierarchical indexing reduces token usage by 70-95%
-- Document sections are loaded only as needed
-- Relationship strength thresholds prevent noise in search results
+- **Optimized Vector Search**: Fine-tuned pgvector HNSW index parameters (m=16, ef_construction=128, ef=100)
+- **Search Caching**: In-memory caching system with expiration for frequently accessed searches
+- **Normalized Embeddings**: Embedding normalization for consistent cosine similarity calculations
+- **Hybrid Search Approach**: Combination of exact keyword matching and vector similarity search
+- **Optimized Database Queries**: Filtering by similarity threshold and batched querying for related nodes
+- **Hierarchical Token Efficiency**: Hierarchical indexing reduces token usage by 70-95%
+- **Dynamic Loading**: Document sections are loaded only as needed
+- **Relevance Filtering**: Relationship strength thresholds prevent noise in search results
+- **Benchmark Tools**: Performance measurement tools for continuous optimization
 
 ## Security Considerations
 
+- Authentication and authorization using JWT tokens
+- Role-based access control with scopes
 - CORS middleware with configurable origins
 - Input validation through Pydantic models
 - Error handling that doesn't expose sensitive information
 - Request logging with unique request IDs
+- Secure password hashing with bcrypt
 
 ## Future Improvements
 
 Areas identified for future improvement:
-- Authentication and authorization
-- Database query optimization
+- Database query optimization for performance at scale
 - Better visualization of document relationships
-- Application health monitoring
-- API documentation with Swagger/OpenAPI
-- Database migration system
+- Enhanced UI for document management
+- Real-time notifications for document changes
+- Support for multiple repositories in the code monitor
+- Integration with CI/CD pipelines
+- More advanced search capabilities with faceted search
+- Enhanced document comparison and versioning features

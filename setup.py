@@ -18,6 +18,12 @@ setup(
         "llama-index-readers-file>=0.1.0",
         "markdown>=3.5.0",
         "nltk>=3.8.0",
+        "python-jose>=3.3.0",
+        "passlib>=1.7.4",
+        "bcrypt>=4.1.2",
+        "alembic>=1.13.1",
+        "python-dotenv>=1.0.1",
+        "email-validator>=2.1.0",
     ],
     extras_require={
         "dev": [

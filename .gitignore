@@ -68,7 +68,15 @@ out/
 
 # Teszteléshez kapcsolódó kimenetek
 coverage/
+coverage_report/
+htmlcov/
+.coverage
+.pytest_cache/
 .nyc_output/
+
+# Database migrations
+migrations/__pycache__/
+migrations/versions/__pycache__/
 
 # Dockerrel kapcsolatos dolgok (opcionális, ha nem akarod commitolni a build kontextust)
 # docker-compose.override.yml # ha van lokális override fájl

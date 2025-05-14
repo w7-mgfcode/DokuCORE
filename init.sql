@@ -64,7 +64,26 @@ CREATE TABLE document_keywords (
     importance FLOAT NOT NULL
 );
 
--- Similarity search indices
-CREATE INDEX ON documents USING hnsw (embedding vector_cosine_ops);
-CREATE INDEX ON document_hierarchy USING hnsw (embedding vector_cosine_ops);
-CREATE INDEX ON document_keywords USING hnsw (embedding vector_cosine_ops);
+-- Similarity search indices with optimized parameters
+-- The HNSW algorithm parameters are optimized for better search performance:
+-- m: Maximum number of connections per node (higher = more accuracy but slower build)
+-- ef_construction: Size of the dynamic candidate list during index construction (higher = more accuracy but slower build)
+-- ef: Size of the dynamic candidate list during search (higher = more accuracy but slower search)
+
+-- Documents index
+CREATE INDEX ON documents USING hnsw (embedding vector_cosine_ops) 
+WITH (m = 16, ef_construction = 128);
+
+-- Document hierarchy index
+CREATE INDEX ON document_hierarchy USING hnsw (embedding vector_cosine_ops)
+WITH (m = 16, ef_construction = 128);
+
+-- Document keywords index
+CREATE INDEX ON document_keywords USING hnsw (embedding vector_cosine_ops)
+WITH (m = 16, ef_construction = 128);
+
+-- Set the ef search parameter for each index
+-- This affects search performance at query time
+ALTER INDEX documents_embedding_idx SET (ef = 100);
+ALTER INDEX document_hierarchy_embedding_idx SET (ef = 100);
+ALTER INDEX document_keywords_embedding_idx SET (ef = 100);

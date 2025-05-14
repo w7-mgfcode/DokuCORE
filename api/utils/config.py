@@ -44,6 +44,10 @@ class Config:
         # Logging configuration
         self.log_level = os.environ.get("LOG_LEVEL", "INFO")
         
+        # Authentication configuration
+        self.jwt_secret_key = os.environ.get("JWT_SECRET_KEY", "insecure-secret-key-change-in-production")
+        self.jwt_token_expire_minutes = int(os.environ.get("JWT_TOKEN_EXPIRE_MINUTES", 30))
+        
         # Initialize logging
         self._setup_logging()
         
@@ -124,6 +128,9 @@ class Config:
             "search": self.get_search_config(),
             "logging": {
                 "level": self.log_level
+            },
+            "auth": {
+                "token_expire_minutes": self.jwt_token_expire_minutes
             }
         }
 
