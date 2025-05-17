@@ -1,0 +1,25 @@
+{
+  "repositories": [
+    {
+      "name": "dokucoreMain",
+      "path": "/app/repo",
+      "branch": "main",
+      "enabled": true,
+      "check_interval": 300,
+      "file_patterns": ["*.py", "*.js", "*.go", "*.java", "*.ts", "*.jsx", "*.tsx"],
+      "exclude_patterns": ["test_*", "*_test.*", "*.min.js", "node_modules/*", ".git/*"],
+      "priority_boost": 1.0
+    },
+    {
+      "name": "anotherRepo",
+      "path": "/app/secondary-repo",
+      "url": "https://github.com/example/repo.git",
+      "branch": "develop",
+      "enabled": false,
+      "check_interval": 600,
+      "file_patterns": ["*.py", "*.js"],
+      "exclude_patterns": ["vendor/*", "dist/*"],
+      "priority_boost": 0.8
+    }
+  ]
+}

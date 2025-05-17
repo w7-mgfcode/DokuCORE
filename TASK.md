@@ -95,7 +95,14 @@ This document tracks current tasks, backlog items, and sub-tasks for implementin
 - [ ] Create API client libraries for popular languages
 
 ### Testing and Quality Assurance
-- [ ] Write unit tests for core components
+- [ ] Write unit tests for core components (2025-05-17) - In Progress
+  - [x] Created tests for segmentation_strategy module
+  - [x] Created tests for embedding_config module
+  - [x] Created tests for relationship_thresholds module
+  - [x] Created tests for search_optimizer module
+  - [x] Created tests for advanced_keyword_extractor module
+  - [x] Created tests for visualization module
+  - [ ] Create test runner for containerized environment
 - [ ] Implement integration tests for API endpoints
 - [ ] Create performance benchmarks
 - [ ] Setup automated testing pipeline
@@ -118,19 +125,19 @@ This document tracks current tasks, backlog items, and sub-tasks for implementin
 ## Sub-Tasks
 
 ### Hierarchical Indexing Implementation
-- [ ] Research optimal node segmentation strategies
-- [ ] Determine embedding model parameters
-- [ ] Define relationship strength thresholds
-- [ ] Design keyword extraction algorithm
-- [ ] Optimize hierarchical search parameters
-- [ ] Create index visualization tools
+- [x] Research optimal node segmentation strategies (2025-05-17)
+- [x] Determine embedding model parameters (2025-05-17)
+- [x] Define relationship strength thresholds (2025-05-17)
+- [x] Design keyword extraction algorithm (2025-05-17)
+- [x] Optimize hierarchical search parameters (2025-05-17)
+- [x] Create index visualization tools (2025-05-17)
 
 ### Code Monitor Enhancements
-- [ ] Improve change detection accuracy
-- [ ] Implement intelligent task prioritization
-- [ ] Add support for multiple repositories
-- [ ] Create change summary generation
-- [ ] Develop task assignment recommendations
+- [x] Improve change detection accuracy (2025-05-17)
+- [x] Implement intelligent task prioritization (2025-05-17)
+- [x] Add support for multiple repositories (2025-05-17)
+- [x] Create change summary generation (2025-05-17)
+- [x] Develop task assignment recommendations (2025-05-17)
 
 ### Database Optimization
 - [ ] Fine-tune pgvector index parameters
@@ -187,3 +194,6 @@ This document tracks current tasks, backlog items, and sub-tasks for implementin
 - [ ] Add bulk document import functionality
 - [ ] Implement adaptive embedding model selection
 - [ ] Create automatic relationship discovery across documents
+- [ ] Create Docker test service for running unit tests (2025-05-17)
+- [ ] Add numpy to API requirements for testing (2025-05-17)
+- [ ] Configure matplotlib backend for headless testing (2025-05-17)

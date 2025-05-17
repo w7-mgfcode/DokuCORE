@@ -10,6 +10,7 @@ from .routers import (
     search_router,
     auth_router,
     version_router,
+    visualization_router,
     DocumentRouter,
     TaskRouter,
     SearchRouter,
@@ -33,6 +34,7 @@ app = FastAPI(
         {"name": "documents", "description": "Operations with documentation"},
         {"name": "tasks", "description": "Operations with documentation tasks"},
         {"name": "search", "description": "Search functionality"},
+        {"name": "visualization", "description": "Index visualization tools"},
         {"name": "health", "description": "Health check endpoints"},
     ],
     docs_url="/api/docs",
@@ -69,6 +71,7 @@ app.include_router(task_router)
 app.include_router(search_router)
 app.include_router(auth_router)
 app.include_router(version_router)
+app.include_router(visualization_router)
 
 # Mount MCP server
 mcp.mount()

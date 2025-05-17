@@ -46,9 +46,15 @@ services:
       - REPO_PATH=${REPO_PATH}
       - API_URL=${API_URL}
       - CHECK_INTERVAL=${CHECK_INTERVAL}
+      - WEBHOOK_ENABLED=${WEBHOOK_ENABLED:-false}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - LLM_API_URL=${LLM_API_URL}
+      - LLM_API_KEY=${LLM_API_KEY}
     volumes:
       # Mount your actual repository here
       - ./repo:/app/repo
+      # Mount configuration files
+      - ./code-monitor/config:/app/config
 
 volumes:
   postgres_data:

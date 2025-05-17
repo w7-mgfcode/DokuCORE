@@ -6,7 +6,13 @@ DokuCORE is a comprehensive documentation system that uses AI to help maintain, 
 
 - **Semantic Understanding**: Hierarchical indexing provides semantic understanding of documentation content
 - **Efficient Token Usage**: Only loads relevant document sections, saving 70-95% on token usage
-- **Code Monitoring**: Automatically monitors code changes to suggest documentation updates
+- **Enhanced Code Monitoring**:
+  - Advanced change detection with AST parsing for accurate code analysis
+  - Intelligent task prioritization based on file importance and change severity
+  - Multi-repository monitoring with concurrent thread support
+  - AI-powered change summary generation with LLM integration
+  - Developer expertise-based task assignment recommendations
+  - Webhook support for real-time notifications
 - **AI Integration**: MCP protocol integration for AI tools like ClaudeCode
 - **Vector Search**: Powerful semantic search using pgvector in PostgreSQL
 - **Hierarchical Structure**: Maintains document relationships and context
@@ -20,6 +26,12 @@ DokuCORE is a comprehensive documentation system that uses AI to help maintain, 
 - **Search Caching**: In-memory caching system for frequent searches with up to 100x speedup
 - **Optimized Vector Indices**: Fine-tuned pgvector HNSW indices for faster similarity search
 - **Performance Benchmarking**: Built-in tools for measuring and optimizing search performance
+- **Advanced Search Optimization**: Research-backed search strategies for precision vs recall balance
+- **Dynamic Node Segmentation**: Intelligent document chunking for optimal embedding and retrieval
+- **Relationship Strength Thresholds**: Configurable thresholds for different relationship types
+- **Advanced Keyword Extraction**: Multiple algorithms including TF-IDF, TextRank, NER, and phrase extraction
+- **Index Visualization**: Interactive graphs and reports for exploring document relationships
+- **Embedding Model Configuration**: Optimized parameters for different embedding models and use cases
 
 ## System Architecture
 
@@ -32,6 +44,13 @@ The system consists of the following components:
 5. **React UI**: Modern web interface for document management
 6. **Version History System**: Maintains document revisions
 7. **Approval Workflow**: Manages document approval process
+8. **Advanced Indexing Modules**:
+   - **Segmentation Strategy**: Intelligent document chunking with overlap
+   - **Embedding Configuration**: Optimized parameters for various models
+   - **Relationship Thresholds**: Research-backed relationship strength rules
+   - **Search Optimizer**: Adaptive search strategies (precision vs recall)
+   - **Advanced Keyword Extractor**: Multi-algorithm keyword extraction
+   - **Visualization Tools**: Interactive graphs and reports
 
 ## Installation
 
@@ -141,14 +160,23 @@ The system provides the following REST API endpoints:
 
 #### Tasks
 - `POST /tasks/`: Create a new task
-- `GET /tasks/`: List tasks
+- `GET /tasks/`: List all tasks
+- `GET /tasks/{task_id}`: Get task details
 - `PUT /tasks/{task_id}`: Update task status
 
 #### Search
-- `GET /search/`: Search documentation
+- `GET /search/`: Search documents
+- `GET /search/hierarchical`: Hierarchical search with context
 - `GET /search/cache/stats`: Get search cache statistics
 - `POST /search/cache/clear`: Clear the search cache
 - `GET /search/benchmark`: Benchmark search performance
+
+#### Visualization
+- `GET /api/visualization/hierarchy/{document_id}`: Visualize document hierarchy
+- `GET /api/visualization/relationships/{document_id}`: Visualize document relationships
+- `GET /api/visualization/search/{query}`: Visualize search results
+- `GET /api/visualization/keywords/{document_id}`: Visualize keyword distribution
+- `GET /api/visualization/report`: Generate comprehensive index report
 
 #### Health
 - `GET /health`: Overall health check
@@ -214,7 +242,16 @@ DokuCORE/
 │   │   ├── auth_router.py
 │   │   └── task_router.py
 │   ├── indexing/
-│   │   └── hierarchical_indexer.py
+│   │   ├── hierarchical_indexer.py
+│   │   ├── markdown_parser.py
+│   │   ├── keyword_extractor.py
+│   │   ├── hierarchical_search.py
+│   │   ├── segmentation_strategy.py
+│   │   ├── embedding_config.py
+│   │   ├── relationship_thresholds.py
+│   │   ├── search_optimizer.py
+│   │   ├── advanced_keyword_extractor.py
+│   │   └── visualization.py
 │   └── mcp_tools.py
 ├── ui/
 │   ├── package.json
@@ -253,12 +290,25 @@ The project uses pytest for testing. To run the tests:
 # Run all tests
 ./run_tests.sh
 
-# Run specific test files
-python -m pytest tests/api/test_document_endpoints.py
+# Run tests in Docker (recommended)
+docker-compose exec api python -m pytest tests/ -v
 
-# Run tests with specific markers
-python -m pytest -m unit  # Run unit tests only
+# Run specific test modules
+docker-compose exec api python -m pytest tests/indexing/ -v
+docker-compose exec api python -m pytest tests/api/ -v
+
+# Run specific test files
+docker-compose exec api python -m pytest tests/indexing/test_segmentation_strategy.py -v
+
+# Run tests with coverage
+docker-compose exec api python -m pytest tests/ --cov=api --cov-report=html
 ```
+
+The test suite includes:
+- Unit tests for all indexing modules
+- Integration tests for API endpoints
+- Mocked tests for external dependencies
+- Performance benchmarks (WIP)
 
 ### Database Migrations
 
@@ -299,6 +349,54 @@ Key configuration options:
 5. Commit your changes (`git commit -m 'Add amazing feature'`)
 6. Push to the branch (`git push origin feature/amazing-feature`)
 7. Open a Pull Request
+
+## Advanced Features
+
+### Segmentation Strategy
+The system uses intelligent document segmentation to optimize token usage:
+- Header-based segmentation for structured documents
+- Semantic boundary detection for natural text flow
+- Token-limited chunks for embedding efficiency
+- Overlapping segments to maintain context
+
+### Embedding Configuration
+Research-backed configurations for different embedding models:
+- Optimized parameters for MiniLM, MPNet, Ada, Instructor, and E5
+- Use-case specific configurations (indexing, search, keywords)
+- Memory usage calculations and batch size optimization
+- Automatic model selection based on requirements
+
+### Relationship Management
+Sophisticated relationship detection and scoring:
+- Parent-child, sibling, semantic, and keyword-based relationships
+- Research-backed threshold values for each relationship type
+- Adaptive thresholds based on corpus characteristics
+- Combined strength calculations for multi-type relationships
+
+### Search Optimization
+Adaptive search strategies for different use cases:
+- Precision-focused for exact matches
+- Recall-focused for comprehensive results
+- Balanced for general use
+- Speed-optimized for real-time applications
+- Query expansion and result diversity optimization
+
+### Keyword Extraction
+Multiple algorithms for comprehensive keyword extraction:
+- Enhanced TF-IDF with document frequency
+- TextRank graph-based algorithm
+- Named Entity Recognition (NER)
+- Multi-word phrase extraction
+- Domain-specific term boosting
+
+### Visualization Tools
+Interactive visualization of document structures:
+- Hierarchical document tree visualization
+- Relationship network graphs
+- Search result relevance charts
+- Keyword distribution plots
+- Comprehensive HTML reports
+- Interactive D3.js graphs
 
 ## License
 

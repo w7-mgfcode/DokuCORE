@@ -40,3 +40,17 @@ Never delete or overwrite existing code unless instructed or if it's part of a t
 
 
 Please start by analyzing the current project files and give me a clear implementation plan. Let's approach this systematically by breaking down the implementation into manageable steps.
+
+
+
+Check TASK.md and continue the development!
+### Code Monitor Enhancements
+- [ ] Improve change detection accuracy
+- [ ] Implement intelligent task prioritization
+- [ ] Add support for multiple repositories
+- [ ] Create change summary generation
+- [ ] Develop task assignment recommendations
+Mark completed tasks in TASK.md after finishing them
+Add newly discovered sub-tasks to TASK.md under a "Discovered During Work" section
+Update README.md when adding features, changing dependencies, or modifying setup steps
+Comment non-obvious code so it's understandable to a mid-level developer

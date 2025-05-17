@@ -1,0 +1,74 @@
+{
+  "alice": {
+    "username": "alice",
+    "email": "alice@example.com",
+    "expertise_areas": {
+      "api": 0.9,
+      "backend": 0.8,
+      "database": 0.7,
+      "security": 0.6
+    },
+    "languages": {
+      "python": 0.9,
+      "javascript": 0.6,
+      "go": 0.4,
+      "sql": 0.8
+    },
+    "completed_tasks": 47,
+    "average_task_time": 3.5,
+    "current_workload": 2,
+    "availability": "available",
+    "preferred_files": [],
+    "review_history": {},
+    "last_active": null,
+    "quality_score": 0.92
+  },
+  "bob": {
+    "username": "bob",
+    "email": "bob@example.com",
+    "expertise_areas": {
+      "frontend": 0.9,
+      "ui": 0.8,
+      "testing": 0.6,
+      "api": 0.5
+    },
+    "languages": {
+      "javascript": 0.9,
+      "typescript": 0.8,
+      "python": 0.5,
+      "css": 0.9
+    },
+    "completed_tasks": 34,
+    "average_task_time": 4.0,
+    "current_workload": 3,
+    "availability": "busy",
+    "preferred_files": [],
+    "review_history": {},
+    "last_active": null,
+    "quality_score": 0.88
+  },
+  "charlie": {
+    "username": "charlie",
+    "email": "charlie@example.com",
+    "expertise_areas": {
+      "infrastructure": 0.8,
+      "security": 0.7,
+      "backend": 0.6,
+      "database": 0.5
+    },
+    "languages": {
+      "go": 0.8,
+      "python": 0.7,
+      "bash": 0.9,
+      "yaml": 0.8
+    },
+    "completed_tasks": 28,
+    "average_task_time": 5.0,
+    "current_workload": 1,
+    "availability": "available",
+    "preferred_files": [],
+    "review_history": {},
+    "last_active": null,
+    "quality_score": 0.85
+  }
+}
